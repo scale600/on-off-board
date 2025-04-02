@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 직원 정보
+model Employee {
+  id                String              @id @default(uuid())
+  name              String
+  emailPersonal     String              @unique @map("email_personal")
+  emailCompany      String?             @unique @map("email_company")
+  region            Region
+  department        String
+  position          String
+  joiningDate       DateTime            @map("joining_date")
+  terminationDate   DateTime?           @map("termination_date")
+  status            Status              @default(ACTIVE)
+  applications      EmployeeApplication[] @relation("EmployeeToApplications")
+  offboardings      Offboarding[]       @relation("EmployeeToOffboardings")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  @@map("employees")
+}
+
+// 애플리케이션 정보
+model Application {
+  id                String              @id @default(uuid())
+  name              String
+  description       String
+  type              ApplicationType
+  isRequired        Boolean             @default(false)
+  regions           Region[]
+  employees         EmployeeApplication[] @relation("ApplicationToEmployees")
+  offboardings      OffboardingApplication[] @relation("ApplicationToOffboardings")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  @@map("applications")
+}
+
+// 직원-애플리케이션 매핑
+model EmployeeApplication {
+  id                String              @id @default(uuid())
+  employee          Employee            @relation("EmployeeToApplications", fields: [employeeId], references: [id])
+  employeeId        String              @map("employee_id")
+  application       Application         @relation("ApplicationToEmployees", fields: [applicationId], references: [id])
+  applicationId     String              @map("application_id")
+  status            EmployeeApplicationStatus @default(REQUESTED)
+  requestedBy       String              @map("requested_by")
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  @@map("employee_applications")
+}
+
+// 사용자 (시스템 관리자, HR 매니저 등)
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+// 열거형 정의
+enum Region {
+  US
+  EU
+  KR
+  CN
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+enum ApplicationType {
+  ONBOARDING
+  OFFBOARDING
+}
+
+enum EmployeeApplicationStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  CREATED
+}
+
+enum Role {
+  ADMIN
+  HR_MANAGER
+  USER
+}
+
+model Offboarding {
+  id                String              @id @default(uuid())
+  employee          Employee            @relation("EmployeeToOffboardings", fields: [employeeId], references: [id])
+  employeeId        String              @map("employee_id")
+  applications      OffboardingApplication[] @relation("OffboardingToApplications")
+  startDate         DateTime            @map("start_date")
+  endDate           DateTime            @map("end_date")
+  status            OffboardingStatus   @default(PENDING)
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  @@map("offboarding")
+}
+
+model OffboardingApplication {
+  id                String              @id @default(uuid())
+  offboarding       Offboarding         @relation("OffboardingToApplications", fields: [offboardingId], references: [id])
+  offboardingId     String              @map("offboarding_id")
+  application       Application         @relation("ApplicationToOffboardings", fields: [applicationId], references: [id])
+  applicationId     String              @map("application_id")
+  status            OffboardingApplicationStatus @default(PENDING)
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
+
+  @@map("offboarding_applications")
+}
+
+enum OffboardingStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum OffboardingApplicationStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
