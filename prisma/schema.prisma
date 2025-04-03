@@ -57,7 +57,8 @@ model EmployeeApplication {
   application       Application         @relation("ApplicationToEmployees", fields: [applicationId], references: [id])
   applicationId     String              @map("application_id")
   status            EmployeeApplicationStatus @default(REQUESTED)
-  requestedBy       String              @map("requested_by")
+  requestedBy       User                @relation(fields: [requestedById], references: [id])
+  requestedById     String              @map("requested_by")
   createdAt         DateTime            @default(now()) @map("created_at")
   updatedAt         DateTime            @updatedAt @map("updated_at")
 
@@ -66,12 +67,13 @@ model EmployeeApplication {
 
 // 사용자 (시스템 관리자, HR 매니저 등)
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                String              @id @default(uuid())
+  email             String              @unique
+  name              String
+  role              Role                @default(USER)
+  applications      EmployeeApplication[] 
+  createdAt         DateTime            @default(now()) @map("created_at")
+  updatedAt         DateTime            @updatedAt @map("updated_at")
 
   @@map("users")
 }

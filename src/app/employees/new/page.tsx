@@ -4,6 +4,9 @@ import { prisma } from '@/lib/prisma';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { EmployeeForm } from '../_components/employee-form';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { Region } from '@prisma/client';
 
 export const metadata: Metadata = {
   title: 'New Employee',
@@ -18,15 +21,31 @@ export default async function NewEmployeePage() {
   async function createEmployee(data: FormData) {
     'use server';
 
+    const session = await getServerSession(authOptions);
+    if (!session?.user?.email) {
+      throw new Error('Not authenticated');
+    }
+
+    // Get or create user
+    const user = await prisma.user.upsert({
+      where: { email: session.user.email },
+      update: {},
+      create: {
+        email: session.user.email,
+        name: session.user.name || 'Unknown',
+      },
+    });
+
     const name = data.get('name') as string;
     const emailPersonal = data.get('emailPersonal') as string;
     const emailCompany = data.get('emailCompany') as string;
-    const region = data.get('region') as string;
+    const region = data.get('region') as Region;
     const department = data.get('department') as string;
     const position = data.get('position') as string;
     const joiningDate = data.get('joiningDate') as string;
     const applicationIds = data.getAll('applications') as string[];
 
+    // First create the employee
     const employee = await prisma.employee.create({
       data: {
         name,
@@ -37,14 +56,20 @@ export default async function NewEmployeePage() {
         position,
         joiningDate: new Date(joiningDate),
         status: 'ACTIVE',
-        applications: {
-          create: applicationIds.map((applicationId) => ({
-            applicationId,
-            status: 'REQUESTED',
-          })),
-        },
       },
     });
+
+    // Then create the employee applications
+    if (applicationIds.length > 0) {
+      await prisma.employeeApplication.createMany({
+        data: applicationIds.map((applicationId) => ({
+          employeeId: employee.id,
+          applicationId,
+          status: 'REQUESTED',
+          requestedById: user.id,
+        })),
+      });
+    }
 
     redirect(`/employees/${employee.id}`);
   }
