@@ -1,5 +1,3 @@
-'use client';
-
 import { ColumnDef } from '@tanstack/react-table';
 import { Employee } from '@prisma/client';
 import { Button } from '@/components/ui/button';

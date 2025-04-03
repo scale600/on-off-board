@@ -10,10 +10,15 @@ export const metadata: Metadata = {
   description: 'Manage application information',
 };
 
-export default async function ApplicationsPage() {
+async function getApplications() {
   const applications = await prisma.application.findMany({
     orderBy: { name: 'asc' },
   });
+  return applications;
+}
+
+export default async function ApplicationsPage() {
+  const applications = await getApplications();
 
   return (
     <div className="container py-6">

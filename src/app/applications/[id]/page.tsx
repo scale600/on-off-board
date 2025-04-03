@@ -34,7 +34,7 @@ async function getApplication(id: string) {
   const application = await prisma.application.findUnique({
     where: { id },
     include: {
-      employees: {
+      employeeApplications: {
         include: {
           employee: true,
         },
@@ -90,24 +90,14 @@ export default async function ApplicationPage({
             </div>
             <div>
               <dt className="text-sm font-medium text-muted-foreground">
-                Required
+                Status
               </dt>
               <dd className="mt-1">
-                <Badge variant={application.isRequired ? 'default' : 'secondary'}>
-                  {application.isRequired ? 'Yes' : 'No'}
+                <Badge
+                  variant={application.status === 'ACTIVE' ? 'default' : 'destructive'}
+                >
+                  {application.status}
                 </Badge>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-sm font-medium text-muted-foreground">
-                Regions
-              </dt>
-              <dd className="mt-1 flex flex-wrap gap-2">
-                {application.regions.map((region) => (
-                  <Badge key={region} variant="outline">
-                    {region}
-                  </Badge>
-                ))}
               </dd>
             </div>
           </dl>
@@ -121,7 +111,7 @@ export default async function ApplicationPage({
                 Total Requests
               </dt>
               <dd className="mt-1 text-2xl font-bold">
-                {application.employees.length}
+                {application.employeeApplications.length}
               </dd>
             </div>
             <div>
@@ -130,7 +120,7 @@ export default async function ApplicationPage({
               </dt>
               <dd className="mt-1 text-2xl font-bold">
                 {
-                  application.employees.filter(
+                  application.employeeApplications.filter(
                     (ea) => ea.status === 'REQUESTED'
                   ).length
                 }
@@ -142,7 +132,7 @@ export default async function ApplicationPage({
               </dt>
               <dd className="mt-1 text-2xl font-bold">
                 {
-                  application.employees.filter(
+                  application.employeeApplications.filter(
                     (ea) => ea.status === 'CREATED'
                   ).length
                 }
@@ -165,7 +155,7 @@ export default async function ApplicationPage({
               </tr>
             </thead>
             <tbody>
-              {application.employees.map((ea) => (
+              {application.employeeApplications.map((ea) => (
                 <tr key={ea.id} className="border-b">
                   <td className="px-4 py-2">
                     <Link

@@ -1,8 +1,7 @@
 {
-  "/employees/page": "app/employees/page.js",
-  "/page": "app/page.js",
+  "/not-found": "app/not-found.js",
+  "/employees/[id]/page": "app/employees/[id]/page.js",
+  "/employees/[id]/edit/page": "app/employees/[id]/edit/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/api/auth/[...nextauth]/route": "app/api/auth/[...nextauth]/route.js",
-  "/applications/page": "app/applications/page.js",
-  "/settings/page": "app/settings/page.js"
+  "/employees/page": "app/employees/page.js"
 }

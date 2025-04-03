@@ -1,22 +1,23 @@
 # Employee On/Off-boarding Management System
+# 직원 온/오프보딩 관리 시스템
 
-A web-based system for managing employee onboarding/offboarding processes across global corporations.
+글로벌 법인의 직원 온보딩/오프보딩 프로세스를 관리하는 웹 기반 시스템입니다.
 
-## Key Features
+## 주요 기능 (Key Features)
 
-### Onboarding Process
-- HR managers register basic information for new employees
-- Request and approval workflow for required app accounts
-- Region-specific app account management (US, EU, Korea, China)
-- Real-time account creation status monitoring
+### 온보딩 프로세스 (Onboarding Process)
+- HR 매니저가 신규 입사자 기본 정보 등록
+- 필요한 앱 계정 생성 요청 및 승인 워크플로우
+- 법인별(US, EU, Korea, China) 맞춤형 앱 계정 관리
+- 실시간 계정 생성 상태 모니터링
 
-### Offboarding Process
-- Email-based search for departing employees
-- Automatic retrieval of created accounts
-- Account deletion progress tracking
-- Region-specific offboarding checklist management
+### 오프보딩 프로세스 (Offboarding Process)
+- 이메일 기반 퇴사 예정자 검색
+- 생성된 계정 목록 자동 조회
+- 계정 삭제 진행 상황 추적
+- 법인별 오프보딩 체크리스트 관리
 
-## Tech Stack
+## 기술 스택 (Tech Stack)
 
 ### Frontend
 - Next.js 14 (App Router)
@@ -29,7 +30,7 @@ A web-based system for managing employee onboarding/offboarding processes across
 - Next.js API Routes
 - Prisma ORM
 - AWS Aurora PostgreSQL
-- NextAuth.js (Authentication)
+- NextAuth.js (인증)
 
 ### Infrastructure
 - AWS ECS Fargate
@@ -37,7 +38,7 @@ A web-based system for managing employee onboarding/offboarding processes across
 - AWS S3 (static assets)
 - AWS CloudFront (CDN)
 
-## Database Schema
+## 데이터베이스 구조 (Database Schema)
 
 ### Employee
 - id: UUID (PK)
@@ -67,14 +68,14 @@ A web-based system for managing employee onboarding/offboarding processes across
 - created_at: DateTime
 - updated_at: DateTime
 
-## System Architecture
+## 시스템 아키텍처 (System Architecture)
 
 ```
 Client (Browser) <-> CloudFront <-> ECS Fargate (Next.js) <-> Aurora PostgreSQL
                                                           <-> AWS S3
 ```
 
-## Local Development Setup
+## 로컬 개발 환경 설정 (Local Development Setup)
 
 ```bash
 # Install dependencies
@@ -90,7 +91,7 @@ npx prisma migrate dev
 npm run dev
 ```
 
-## Environment Variables
+## 환경 변수 (Environment Variables)
 
 ```
 DATABASE_URL=postgresql://...
@@ -100,44 +101,44 @@ AWS_ACCESS_KEY_ID=...
 AWS_SECRET_ACCESS_KEY=...
 ```
 
-## API Endpoints
+## API 엔드포인트 (API Endpoints)
 
 ### Employees
-- GET /api/employees - Get employee list
-- POST /api/employees - Register new employee
-- GET /api/employees/:id - Get employee details
-- PUT /api/employees/:id - Update employee information
-- DELETE /api/employees/:id - Delete employee information
+- GET /api/employees - 직원 목록 조회
+- POST /api/employees - 신규 직원 등록
+- GET /api/employees/:id - 직원 상세 정보
+- PUT /api/employees/:id - 직원 정보 수정
+- DELETE /api/employees/:id - 직원 정보 삭제
 
 ### Applications
-- GET /api/applications - Get application list
-- POST /api/applications - Register new application
-- GET /api/applications/:id - Get application details
-- PUT /api/applications/:id - Update application information
+- GET /api/applications - 앱 목록 조회
+- POST /api/applications - 신규 앱 등록
+- GET /api/applications/:id - 앱 상세 정보
+- PUT /api/applications/:id - 앱 정보 수정
 
 ### Employee Applications
-- GET /api/employee-applications/:employeeId - Get employee's application accounts
-- POST /api/employee-applications - Request application account creation
-- PUT /api/employee-applications/:id - Update application account status
+- GET /api/employee-applications/:employeeId - 직원별 앱 계정 목록
+- POST /api/employee-applications - 앱 계정 생성 요청
+- PUT /api/employee-applications/:id - 앱 계정 상태 업데이트
 
-## Deployment Process
+## 배포 프로세스 (Deployment Process)
 
-1. CI/CD pipeline through GitHub Actions
-2. Automated testing and code quality checks
-3. Automated deployment to AWS ECS Fargate
-4. Automated database migrations
+1. GitHub Actions를 통한 CI/CD 파이프라인
+2. 테스트 자동화 및 코드 품질 검사
+3. AWS ECS Fargate 자동 배포
+4. 데이터베이스 마이그레이션 자동화
 
-## Security Considerations
+## 보안 고려사항 (Security Considerations)
 
-- Role-based access control (RBAC)
-- API endpoint authentication and authorization
-- Sensitive information encryption
-- AWS IAM least privilege principle
+- Role-based 접근 제어 (RBAC)
+- API 엔드포인트 인증 및 인가
+- 민감 정보 암호화 저장
+- AWS IAM 최소 권한 원칙 적용
 
-## Future Improvements
+## 향후 개선사항 (Future Improvements)
 
-1. Slack/Email notification integration
-2. Automated account creation/deletion workflow
-3. Audit log system
-4. Reporting and analytics dashboard
-5. Multi-region deployment support
+1. Slack/Email 알림 통합
+2. 자동화된 계정 생성/삭제 워크플로우
+3. 감사 로그 시스템
+4. 리포팅 및 분석 대시보드
+5. Multi-region 배포 지원

@@ -1,5 +1,3 @@
-'use client';
-
 import { ColumnDef } from '@tanstack/react-table';
 import { Application } from '@prisma/client';
 import { Button } from '@/components/ui/button';
@@ -20,19 +18,7 @@ export const columns: ColumnDef<Application>[] = [
     header: 'Type',
     cell: ({ row }) => {
       const type = row.getValue('type') as string;
-      return type ? <Badge variant="outline">{type}</Badge> : null;
-    },
-  },
-  {
-    accessorKey: 'isRequired',
-    header: 'Required',
-    cell: ({ row }) => {
-      const isRequired = row.getValue('isRequired') as boolean;
-      return (
-        <Badge variant={isRequired ? 'default' : 'secondary'}>
-          {isRequired ? 'Yes' : 'No'}
-        </Badge>
-      );
+      return <Badge variant="outline">{type}</Badge>;
     },
   },
   {
@@ -40,11 +26,11 @@ export const columns: ColumnDef<Application>[] = [
     header: 'Status',
     cell: ({ row }) => {
       const status = row.getValue('status') as string;
-      return status ? (
+      return (
         <Badge variant={status === 'ACTIVE' ? 'default' : 'destructive'}>
           {status}
         </Badge>
-      ) : null;
+      );
     },
   },
   {
