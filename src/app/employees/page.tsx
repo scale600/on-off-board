@@ -1,9 +1,6 @@
 import { Metadata } from 'next';
 import { prisma } from '@/lib/prisma';
-import { DataTable } from '@/components/ui/data-table';
-import { columns } from './columns';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import EmployeesClient from './employees-client';
 
 export const metadata: Metadata = {
   title: 'Employees',
@@ -19,18 +16,5 @@ async function getEmployees() {
 
 export default async function EmployeesPage() {
   const employees = await getEmployees();
-
-  return (
-    <div className="container py-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Employees</h1>
-        <Button asChild>
-          <Link href="/employees/new">Add Employee</Link>
-        </Button>
-      </div>
-      <div className="mt-6">
-        <DataTable columns={columns} data={employees} />
-      </div>
-    </div>
-  );
+  return <EmployeesClient employees={employees} />;
 } 

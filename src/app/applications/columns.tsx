@@ -1,3 +1,5 @@
+'use client';
+
 import { ColumnDef } from '@tanstack/react-table';
 import { Application } from '@prisma/client';
 import { Button } from '@/components/ui/button';
