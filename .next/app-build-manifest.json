@@ -21,20 +21,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/applications/page.js"
     ],
-    "/employees/[id]/page": [
+    "/settings/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/employees/[id]/page.js"
+      "static/chunks/app/settings/page.js"
     ],
-    "/employees/[id]/edit/page": [
+    "/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/employees/[id]/edit/page.js"
+      "static/chunks/app/page.js"
     ],
-    "/not-found": [
+    "/applications/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/not-found.js"
+      "static/chunks/app/applications/[id]/page.js"
     ]
   }
 }
