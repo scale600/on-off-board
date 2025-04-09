@@ -56,6 +56,14 @@ export default async function EmployeeEditPage({
   async function updateEmployee(data: FormData) {
     'use server';
 
+    const adminUser = await prisma.user.findFirst({
+      where: { role: 'ADMIN' },
+    });
+
+    if (!adminUser) {
+      throw new Error('System admin user not found');
+    }
+
     const name = data.get('name') as string;
     const emailPersonal = data.get('emailPersonal') as string;
     const emailCompany = data.get('emailCompany') as string;
@@ -84,7 +92,7 @@ export default async function EmployeeEditPage({
           create: applicationIds.map((applicationId) => ({
             applicationId,
             status: 'REQUESTED',
-            requestedById: 'system', // TODO: Get from session
+            requestedById: adminUser.id,
           })),
         },
       },
